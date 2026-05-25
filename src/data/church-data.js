@@ -13,7 +13,7 @@ export const district = {
 }
 
 export const wards = [
-  { id: 'gatanga', name: 'Gatanga Ward', population: 14820 },
+  { id: 'nginda', name: 'Nginda Ward', population: 14820 },
   { id: 'muthithi', name: 'Muthithi Ward', population: 11340 },
   { id: 'kamira', name: 'Kamira Ward', population: 12500 },
   { id: 'kigumo', name: 'Kigumo Ward', population: 13500 },
@@ -24,7 +24,7 @@ export const churches = [
     id: 'gathera',
     name: 'Gathera SDA',
     role: 'Church',
-    ward: 'gatanga',
+    ward: 'nginda',
     members: 50,
     founded: 1974,
     services: 'Sabbath · 09:00',
