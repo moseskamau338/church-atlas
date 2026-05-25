@@ -73,6 +73,32 @@ VITE_BASE_PATH=/gathera-church-vue/ npm run build
 npm run preview
 ```
 
+## Versioning & releases
+
+Versions follow [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`). The current version is shown in the footer colophon and comes from `package.json` via Vite's `__APP_VERSION__` define — no manual sync needed.
+
+Releases are cut by [**release-please**](https://github.com/googleapis/release-please). The bot watches `main` and, when there are unreleased changes, opens a `chore(main): release X.Y.Z` PR that:
+
+- Bumps the version in `package.json` (and `.release-please-manifest.json`)
+- Updates `CHANGELOG.md`
+- Tags `vX.Y.Z` and creates a GitHub Release once you merge it
+
+So a release is one click — review the PR, merge it, done. The deploy workflow then ships the new version to GitHub Pages.
+
+**To make this work, commits to `main` must follow [Conventional Commits](https://www.conventionalcommits.org/):**
+
+```
+feat: add membership heatmap toggle           → minor bump
+fix: correct great-circle fallback for OSRM   → patch bump
+docs: clarify deployment steps                → patch bump
+feat!: drop Vue 2 support                     → major bump (breaking)
+refactor: extract tile-layer config           → patch bump
+```
+
+Pre-1.0 (current state), `feat` bumps the patch — breaking changes don't trip a major. Set `"bump-minor-pre-major": false` in `release-please-config.json` to change that behavior when you're ready for 1.0.
+
+If you need a one-off manual bump (rare), `npm version <patch|minor|major>` works — release-please will pick up from wherever the version lands.
+
 ## Editing the data
 
 Church coordinates, membership figures, ward populations, and the district leader all live in [`src/data/church-data.js`](src/data/church-data.js). The OSRM road-distance lookup runs on app mount and caches results in `localStorage` keyed by rounded coordinates, so editing a coordinate invalidates only that pair's cache.

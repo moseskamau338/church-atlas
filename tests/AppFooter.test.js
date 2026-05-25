@@ -28,4 +28,10 @@ describe('AppFooter', () => {
     expect(link.attributes('href')).toBe('https://creativecommons.org/licenses/by/4.0/')
     expect(link.attributes('rel')).toContain('noopener')
   })
+
+  it('renders the app version (from package.json via __APP_VERSION__)', () => {
+    const v = wrapper.get('.colophon__version').text()
+    // Match `v<semver>`, accepting pre-release suffixes (e.g. v1.0.0-beta.1).
+    expect(v).toMatch(/^v\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/)
+  })
 })

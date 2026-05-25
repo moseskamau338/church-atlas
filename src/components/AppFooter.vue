@@ -5,6 +5,10 @@ const props = defineProps({
   data: { type: Object, required: true },
 })
 
+// Injected by Vite (see vite.config.js `define`). Sourced from package.json so
+// release-please's version bump shows up in the UI without any extra wiring.
+const version = __APP_VERSION__
+
 const stats = computed(() => {
   const s = props.data.summary
   return [
@@ -42,6 +46,7 @@ const stats = computed(() => {
       <span>Plate · I</span>
       <span>Compiled from CMS records, May 2026</span>
       <span>Road distances · OSRM (great-circle fallback)</span>
+      <span class="colophon__version">v{{ version }}</span>
     </div>
     <div class="colophon__license">
       <span>Population data · KNBS Kenya Population &amp; Housing Census, Volume 1 (2019)</span>

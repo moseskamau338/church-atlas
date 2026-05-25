@@ -737,6 +737,10 @@ html, body {
   color: var(--ink);
   opacity: 0.50;
 }
+.colophon__version {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
 
 .colophon__license {
   margin-top: 8px;
