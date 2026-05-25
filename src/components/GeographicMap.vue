@@ -28,9 +28,9 @@ let resizeObserver = null
 let fitOpts = null
 let bounds = null
 
-function buildChurchIcon(role, isSelected) {
+function buildChurchIcon(isSelected) {
   const size = 40
-  const color = role === 'Mother Church' ? '#7A2E1F' : '#3A4F2E'
+  const color = '#7A2E1F'
   const ringColor = isSelected ? '#F5EDDE' : 'rgba(245,237,222,0.55)'
   const svg = `
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
@@ -138,14 +138,13 @@ function renderMarkersAndEdges() {
 
   props.data.churches.forEach((c) => {
     const marker = L.marker([c.lat, c.lng], {
-      icon: buildChurchIcon(c.role, props.selectedId === c.id),
+      icon: buildChurchIcon(props.selectedId === c.id),
       title: c.name,
-      zIndexOffset: c.role === 'Mother Church' ? 1000 : 500,
+      zIndexOffset: 800,
     }).addTo(m)
 
     marker.bindTooltip(
       `<div class="church-tip__name">${c.name.replace(' SDA', '')}</div>
-       <div class="church-tip__role">${c.role.toUpperCase()}</div>
        ${props.showPopulation ? `<div class="church-tip__meta">${c.members} members</div>` : ''}`,
       {
         permanent: true,

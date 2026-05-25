@@ -22,7 +22,7 @@ export const churches = [
   {
     id: 'gathera',
     name: 'Gathera SDA',
-    role: 'Mother Church',
+    role: 'Church',
     ward: 'gatanga',
     members: 50,
     founded: 1974,
@@ -39,7 +39,7 @@ export const churches = [
   {
     id: 'muthithi',
     name: 'Muthithi SDA',
-    role: 'Local Church',
+    role: 'Church',
     ward: 'muthithi',
     members: 80,
     founded: 1989,
@@ -53,7 +53,7 @@ export const churches = [
   {
     id: 'kamira',
     name: 'Kamira SDA',
-    role: 'Local Church',
+    role: 'Church',
     ward: 'kamira',
     members: 65,
     founded: 1996,

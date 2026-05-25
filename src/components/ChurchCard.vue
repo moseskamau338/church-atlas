@@ -72,7 +72,6 @@ const futureItems = [
         <div class="church-card__photo-caption">photo · pending upload</div>
       </div>
     </div>
-    <div class="church-card__role">{{ church.role }}</div>
     <h2 class="church-card__name">{{ church.name }}</h2>
     <div class="church-card__meta">
       <div class="field">

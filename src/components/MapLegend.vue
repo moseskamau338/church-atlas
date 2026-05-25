@@ -16,17 +16,7 @@ defineProps({
             <rect x="6.4" y="7.6" width="7.2" height="2.4" fill="#F5EDDE" />
           </svg>
         </span>
-        <span class="legend__label">Mother Church</span>
-      </div>
-      <div class="legend__item">
-        <span class="legend__icon">
-          <svg width="20" height="20" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="8" fill="#3A4F2E" stroke="#1A1714" stroke-width="0.8" />
-            <rect x="8.7" y="5.5" width="2.6" height="8" fill="#F5EDDE" />
-            <rect x="6.4" y="7.6" width="7.2" height="2.4" fill="#F5EDDE" />
-          </svg>
-        </span>
-        <span class="legend__label">Local Church</span>
+        <span class="legend__label">Church</span>
       </div>
       <div v-if="showSabbath" class="legend__item">
         <span class="legend__icon">

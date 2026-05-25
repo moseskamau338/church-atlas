@@ -361,7 +361,7 @@ onBeforeUnmount(() => {
           stroke-dasharray="3 3"
           opacity="0.7"
         />
-        <ChurchGlyph :size="36" :color="c.role === 'Mother Church' ? '#7A2E1F' : '#3A4F2E'" />
+        <ChurchGlyph :size="36" color="#7A2E1F" />
         <text
           x="0"
           y="38"

@@ -5,7 +5,7 @@ import ChurchCard from '../src/components/ChurchCard.vue'
 const church = {
   id: 'gathera',
   name: 'Gathera SDA',
-  role: 'Mother Church',
+  role: 'Church',
   members: 50,
   founded: 1974,
   services: 'Sabbath · 09:00',
@@ -15,15 +15,21 @@ const church = {
 const ward = { id: 'gatanga', name: 'Gatanga Ward', population: 14820 }
 
 describe('ChurchCard', () => {
-  it('renders church name, role, ward, founded, members, services', () => {
+  it('renders church name, ward, founded, members, services', () => {
     const w = mount(ChurchCard, { props: { church, ward } })
     expect(w.get('.church-card__name').text()).toBe('Gathera SDA')
-    expect(w.get('.church-card__role').text()).toBe('Mother Church')
     const text = w.text()
     expect(text).toContain('Gatanga Ward')
     expect(text).toContain('1974')
     expect(text).toContain('50')
     expect(text).toContain('Sabbath · 09:00')
+  })
+
+  it('does not surface a mother/local-church role label', () => {
+    const w = mount(ChurchCard, { props: { church, ward } })
+    expect(w.find('.church-card__role').exists()).toBe(false)
+    expect(w.text()).not.toContain('Mother Church')
+    expect(w.text()).not.toContain('Local Church')
   })
 
   it('formats coordinates to 6 decimals and links to Google Maps', () => {
