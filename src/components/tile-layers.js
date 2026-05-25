@@ -19,6 +19,12 @@ export const TILE_LAYERS = {
     attribution: '© OpenTopoMap (CC-BY-SA)',
     maxZoom: 17,
   },
+  outdoor: {
+    label: 'Outdoor',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles © Esri',
+    maxZoom: 18,
+  },
   muted: {
     label: 'Muted',
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',

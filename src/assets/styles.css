@@ -587,6 +587,7 @@ html, body {
 .more-chip__dot[data-layer="satellite"] { background: linear-gradient(135deg, #3a5232 50%, #6b5a3e 50%); }
 .more-chip__dot[data-layer="osm"]       { background: linear-gradient(135deg, #f6f1e6 50%, #c8b78d 50%); }
 .more-chip__dot[data-layer="terrain"]   { background: linear-gradient(135deg, #c8b89a 50%, #6b8a5e 50%); }
+.more-chip__dot[data-layer="outdoor"]   { background: linear-gradient(135deg, #e8dfc5 50%, #87b273 50%); }
 .more-chip__dot[data-layer="muted"]     { background: linear-gradient(135deg, #ececec 50%, #c4c4c4 50%); }
 
 .more-chip__swatch {
