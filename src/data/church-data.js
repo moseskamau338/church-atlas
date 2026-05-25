@@ -6,7 +6,7 @@
 export const district = {
   name: 'Gathera SDA District',
   county: "Murang'a County",
-  subCounty: 'Gatanga · Kigumo Sub-counties',
+  subCounty: 'Muranga South Sub-County',
   leader: 'Pr. Francis Karanja',
   leaderTitle: 'District Pastor',
   updated: 'May 2026',
