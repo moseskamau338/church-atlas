@@ -39,11 +39,11 @@ jobs:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build
 
+      # Pages must be enabled once via Settings → Pages → Source: GitHub
+      # Actions. The default GITHUB_TOKEN can deploy to Pages but lacks the
+      # admin scope to create the Pages site, so `enablement: true` can't
+      # do this for us.
       - uses: actions/configure-pages@v5
-        with:
-          # Auto-enable Pages on first run so a fresh repo doesn't need
-          # someone to click through Settings → Pages first.
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
