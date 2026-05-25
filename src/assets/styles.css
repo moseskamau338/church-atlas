@@ -1000,7 +1000,9 @@ html, body {
   #app { padding: 6px; }
   .export-root { padding: 18px 16px 14px; }
   .masthead__inner { flex-direction: column; align-items: stretch; gap: 12px; }
-  .masthead__brand { gap: 12px; }
+  /* Reset the desktop flex-basis — in column flex it becomes height, which
+     was creating ~360px of empty space above the controls on mobile. */
+  .masthead__brand { flex: 0 0 auto; gap: 12px; }
   .masthead__brand-mark { width: 40px; height: 40px; }
   .masthead__title { font-size: 26px; white-space: normal; }
   .masthead__sub { font-size: 14px; }

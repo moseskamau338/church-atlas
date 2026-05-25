@@ -6,21 +6,32 @@ import churchData from '../src/data/church-data.js'
 describe('AppFooter', () => {
   const wrapper = mount(AppFooter, { props: { data: churchData } })
 
-  it('renders all six stats with dividers between them', () => {
+  it('renders the three curated stats with dividers between them', () => {
     const stats = wrapper.findAll('.stat')
-    expect(stats).toHaveLength(6)
-    expect(wrapper.findAll('.stat-divider')).toHaveLength(5)
+    expect(stats).toHaveLength(3)
+    expect(wrapper.findAll('.stat-divider')).toHaveLength(2)
+    const labels = stats.map((s) => s.get('.stat__label').text())
+    expect(labels).toEqual(['Churches', 'Sabbath Schools', 'Membership'])
   })
 
-  it('formats membership and reachable-pop with thousands separators', () => {
+  it('formats membership with thousands separators', () => {
+    expect(wrapper.text()).toContain(churchData.summary.totalMembers.toLocaleString())
+  })
+
+  it('omits the technical stats (reachable pop., wards covered, avg distance)', () => {
     const text = wrapper.text()
-    expect(text).toContain(churchData.summary.totalMembers.toLocaleString())
-    expect(text).toContain(churchData.summary.reachablePop.toLocaleString())
+    expect(text).not.toContain('Reachable')
+    expect(text).not.toContain('Wards Covered')
+    expect(text).not.toContain('Avg Distance')
   })
 
   it('shows the district leader and title', () => {
     expect(wrapper.text()).toContain(churchData.district.leader)
     expect(wrapper.text()).toContain(churchData.district.leaderTitle)
+  })
+
+  it('shows the updated date in the byline', () => {
+    expect(wrapper.get('.colophon__byline').text()).toContain(churchData.district.updated)
   })
 
   it('links to the CC BY 4.0 license', () => {
