@@ -1,0 +1,1038 @@
+/* === Gathera Church Atlas — editorial / cartographic === */
+
+:root {
+  --ink:        #1A1714;
+  --paper:      #F5EDDE;
+  --paper-2:    #ECE2CC;
+  --paper-3:    #EFE6D2;
+  --paper-sepia:#EDDFC4;
+  --burgundy:   #7A2E1F;
+  --forest:     #3A4F2E;
+  --gold:       #B8893B;
+  --rule:       #1A1714;
+  --rule-soft:  rgba(26,23,20,0.18);
+  --rule-vsoft: rgba(26,23,20,0.10);
+  --serif: "EB Garamond", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --sans:  "IBM Plex Sans", -apple-system, system-ui, sans-serif;
+  --mono:  "IBM Plex Mono", "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #E8DEC7;
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 16px;
+  background:
+    radial-gradient(ellipse at top, #EFE5CC, #E2D6BB 80%);
+}
+
+.app {
+  width: 100%;
+  max-width: 1480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.export-root {
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  box-shadow:
+    0 2px 0 rgba(26,23,20,0.04),
+    0 30px 70px -30px rgba(26,23,20,0.30),
+    0 2px 12px rgba(26,23,20,0.06);
+  padding: 26px 32px 22px;
+  position: relative;
+}
+
+.app.paper-parchment .export-root { background: var(--paper-3); }
+.app.paper-sepia     .export-root { background: var(--paper-sepia); }
+
+/* tiny corner registration marks */
+.export-root::before,
+.export-root::after {
+  content: "";
+  position: absolute;
+  width: 18px; height: 18px;
+  border: 1px solid var(--rule-soft);
+  pointer-events: none;
+}
+.export-root::before { top: 10px;  left: 10px;  border-right: 0; border-bottom: 0; }
+.export-root::after  { top: 10px;  right: 10px; border-left: 0;  border-bottom: 0; }
+
+/* ============ MASTHEAD ============ */
+.masthead {
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1500;
+}
+.masthead__rule {
+  height: 1px;
+  background: var(--rule);
+  opacity: 0.92;
+}
+.masthead__rule--top { margin-bottom: 4px; }
+.masthead__rule--bot {
+  margin-top: 12px;
+  opacity: 0.6;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rule) 0%, var(--rule) 70%, transparent 100%);
+}
+.masthead__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 14px 0 4px;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.masthead__brand {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  flex: 1 1 360px;
+  min-width: 0;
+}
+.masthead__brand-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.masthead__brand-mark {
+  width: 56px; height: 56px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.masthead__brand-mark svg,
+.masthead__brand-mark-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.masthead__eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.65;
+  margin-bottom: 6px;
+}
+.masthead__title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--ink);
+  font-feature-settings: "lnum", "kern";
+  white-space: nowrap;
+}
+@media (max-width: 1000px) {
+  .masthead__title { font-size: 32px; }
+}
+@media (max-width: 760px) {
+  .masthead__title { font-size: 28px; white-space: normal; }
+}
+.masthead__sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+  opacity: 0.80;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+.masthead__sep {
+  margin: 0 10px;
+  opacity: 0.5;
+}
+
+.masthead__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ctl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule-soft);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+.ctl-btn:hover {
+  background: rgba(26,23,20,0.06);
+  border-color: var(--ink);
+}
+.ctl-btn.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.ctl-btn--primary {
+  background: var(--burgundy);
+  color: var(--paper);
+  border-color: var(--burgundy);
+}
+.ctl-btn--primary:hover {
+  background: #5e2218;
+  border-color: #5e2218;
+  color: var(--paper);
+}
+.ctl-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.ctl-spinner {
+  width: 10px; height: 10px;
+  border: 1.5px solid var(--paper);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.map-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.map-panel {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  /* Fit-in-viewport: shorter of "remaining viewport height" vs a cap. */
+  height: clamp(300px, calc(100vh - 380px), 540px);
+  overflow: hidden;
+}
+
+.map-panel__label {
+  position: absolute;
+  top: 14px; left: 14px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+@media (max-width: 1080px) {
+  /* Geographic panel: layer switcher takes the top — hide redundant label */
+  .map-panel:nth-child(2) .map-panel__label {
+    background: rgba(26,23,20,0.6);
+    backdrop-filter: blur(4px);
+  }
+}
+.map-panel__label-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--burgundy);
+}
+.map-panel__label-dot--green { background: #87B273; }
+
+.map-panel__layer-switcher {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 1000;
+  display: flex;
+  align-items: stretch;
+  background: rgba(245,237,222,0.97);
+  border: 1px solid var(--ink);
+  box-shadow: 0 2px 8px rgba(26,23,20,0.18);
+}
+
+.map-panel__hint {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 350;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.50;
+  padding: 4px 8px;
+  background: rgba(245,237,222,0.7);
+  border: 1px solid var(--rule-vsoft);
+}
+.layer-btn {
+  padding: 8px 12px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--rule-soft);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--ink);
+  transition: background 100ms;
+}
+.layer-btn:last-child { border-right: 0; }
+.layer-btn:hover { background: rgba(26,23,20,0.08); }
+.layer-btn.is-active {
+  background: var(--burgundy);
+  color: var(--paper);
+}
+
+.schematic-svg, .leaflet-host {
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+}
+
+/* north arrow */
+.north-arrow {
+  position: absolute;
+  bottom: 14px; left: 14px;
+  z-index: 400;
+  width: 40px; height: 40px;
+  pointer-events: none;
+}
+.north-arrow svg { width: 100%; height: 100%; }
+
+/* === Leaflet overrides === */
+.leaflet-container {
+  background: var(--paper-2);
+  font-family: var(--sans);
+}
+.leaflet-top.leaflet-right {
+  margin-top: 56px; /* push zoom buttons below our layer switcher */
+}
+.leaflet-bar {
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.leaflet-bar a {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border-bottom: 1px solid var(--rule-soft) !important;
+  border-radius: 0 !important;
+  font-family: var(--serif);
+  font-weight: 600;
+}
+.leaflet-bar a:hover {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(245,237,222,0.85) !important;
+  color: var(--ink) !important;
+  font-family: var(--mono) !important;
+  font-size: 9px !important;
+  letter-spacing: 0.04em;
+  padding: 2px 6px !important;
+}
+.leaflet-control-attribution a {
+  color: var(--burgundy) !important;
+}
+.leaflet-control-scale-line {
+  background: rgba(245,237,222,0.9) !important;
+  border: 1px solid var(--ink) !important;
+  border-top: none !important;
+  color: var(--ink) !important;
+  font-family: var(--mono) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.1em;
+  padding: 1px 5px !important;
+}
+
+.church-marker { background: transparent !important; border: 0 !important; }
+
+/* Permanent leaflet tooltip — editorial label */
+.leaflet-tooltip.church-tip {
+  background: rgba(245,237,222,0.96) !important;
+  border: 1px solid var(--ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 6px rgba(26,23,20,0.18) !important;
+  padding: 4px 9px !important;
+  color: var(--ink) !important;
+  font-family: var(--serif);
+  text-align: center;
+}
+.leaflet-tooltip.church-tip::before { display: none !important; }
+.church-tip__name {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1;
+}
+.church-tip__role {
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+  line-height: 1;
+}
+.church-tip__meta {
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  opacity: 0.72;
+  line-height: 1;
+}
+
+.edge-label { background: transparent !important; border: 0 !important; }
+.edge-label__pill {
+  display: inline-block;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 1px 7px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.edge-label__pill--sabbath {
+  font-size: 9.5px;
+  padding: 0 6px;
+  border-style: dashed;
+  background: rgba(245,237,222,0.92);
+}
+
+.sabbath-marker { background: transparent !important; border: 0 !important; }
+
+.leaflet-tooltip.church-tip--sabbath {
+  padding: 3px 7px !important;
+  background: rgba(245,237,222,0.94) !important;
+  border-style: dashed !important;
+}
+.church-tip__name--small {
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.legend__inner {
+  display: flex;
+  gap: 22px;
+  padding: 6px 18px;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+}
+.legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.legend__icon { display: inline-flex; }
+.legend__label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ============ MORE PANEL ============ */
+.split-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  background: var(--burgundy);
+  border: 1px solid var(--burgundy);
+  color: var(--paper);
+}
+.split-btn__main,
+.split-btn__chevron {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 7px 12px;
+  transition: background 120ms;
+}
+.split-btn__main { padding-right: 10px; }
+.split-btn__chevron {
+  padding: 7px 9px;
+  border-left: 1px solid rgba(245,237,222,0.30);
+}
+.split-btn__main:hover,
+.split-btn__chevron:hover { background: rgba(0,0,0,0.18); }
+.split-btn__main:disabled { opacity: 0.7; cursor: wait; }
+.split-btn.is-open .split-btn__chevron { background: rgba(0,0,0,0.25); }
+
+.more-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(340px, calc(100vw - 32px));
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  box-shadow: 0 18px 40px -12px rgba(26,23,20,0.30), 0 4px 14px rgba(26,23,20,0.10);
+  z-index: 2000;
+  padding: 6px 0 4px;
+}
+.more-panel__arrow {
+  position: absolute;
+  top: -7px;
+  right: 14px;
+  width: 12px; height: 12px;
+  background: var(--paper);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  transform: rotate(45deg);
+}
+.more-panel__section {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule-vsoft);
+}
+.more-panel__section:last-child { border-bottom: 0; }
+.more-panel__label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.55;
+  margin-bottom: 10px;
+}
+.more-panel__grid {
+  display: grid;
+  gap: 6px;
+}
+.more-panel__grid--2 { grid-template-columns: 1fr 1fr; }
+.more-panel__grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.more-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid var(--rule-soft);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 120ms, border-color 120ms;
+  text-align: left;
+}
+.more-chip:hover {
+  border-color: var(--ink);
+  background: rgba(26,23,20,0.04);
+}
+.more-chip.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.more-chip__dot {
+  width: 14px; height: 14px;
+  border: 1px solid currentColor;
+  flex-shrink: 0;
+  display: block;
+}
+.more-chip__dot[data-layer="satellite"] { background: linear-gradient(135deg, #3a5232 50%, #6b5a3e 50%); }
+.more-chip__dot[data-layer="osm"]       { background: linear-gradient(135deg, #f6f1e6 50%, #c8b78d 50%); }
+.more-chip__dot[data-layer="terrain"]   { background: linear-gradient(135deg, #c8b89a 50%, #6b8a5e 50%); }
+.more-chip__dot[data-layer="muted"]     { background: linear-gradient(135deg, #ececec 50%, #c4c4c4 50%); }
+
+.more-chip__swatch {
+  width: 14px; height: 14px;
+  border: 1px solid var(--ink);
+  flex-shrink: 0;
+  display: block;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 9px 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-vsoft);
+}
+.toggle-row:last-child { border-bottom: 0; }
+.toggle-row__label { text-align: left; }
+.toggle-row__switch {
+  width: 32px; height: 18px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 140ms;
+}
+.toggle-row__knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 12px; height: 12px;
+  background: var(--ink);
+  transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.toggle-row.is-on .toggle-row__switch {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+}
+.toggle-row.is-on .toggle-row__knob {
+  background: var(--paper);
+  transform: translateX(14px);
+}
+
+/* anchor: masthead controls must be relative for the More panel arrow */
+.masthead__controls { position: relative; }
+
+/* ============ COLOPHON / FOOTER ============ */
+.colophon {
+  margin-top: 4px;
+}
+.colophon__rule {
+  height: 1px;
+  background: var(--rule);
+  opacity: 0.92;
+  margin-bottom: 14px;
+}
+.colophon__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 32px;
+}
+.colophon__stats {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.stat {
+  padding: 0 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 110px;
+}
+.stat:first-child { padding-left: 0; }
+.stat__label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.65;
+  margin-bottom: 4px;
+}
+.stat__value {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink);
+  font-feature-settings: "lnum", "tnum";
+  margin-bottom: 2px;
+}
+.stat__unit {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink);
+  opacity: 0.55;
+}
+.stat-divider {
+  width: 1px;
+  background: var(--rule-vsoft);
+  align-self: stretch;
+  margin: 4px 0;
+}
+
+.colophon__signature {
+  border-left: 1px solid var(--rule-soft);
+  padding: 4px 0 4px 22px;
+  text-align: right;
+  min-width: 200px;
+}
+.colophon__signature-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.65;
+  margin-bottom: 6px;
+}
+.colophon__signature-name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.colophon__byline {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule-vsoft);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.50;
+}
+
+.colophon__license {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.46;
+}
+.colophon__license-sep { opacity: 0.5; }
+.colophon__license-link {
+  color: var(--burgundy);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--burgundy);
+  padding-bottom: 1px;
+}
+.colophon__license-link:hover {
+  color: #5e2218;
+  border-bottom-style: solid;
+}
+
+/* ============ CHURCH CARD ============ */
+.church-card {
+  position: fixed;
+  top: 50%;
+  right: 32px;
+  transform: translateY(-50%);
+  width: 340px;
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: 0 30px 60px -20px rgba(26,23,20,0.35);
+  padding: 26px 26px 22px;
+  z-index: 1700;
+  animation: cardSlideIn 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translate(20px, -50%); }
+  to   { opacity: 1; transform: translate(0, -50%); }
+}
+.church-card__close {
+  position: absolute;
+  top: 12px; right: 14px;
+  background: transparent;
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.church-card__close:hover { color: var(--burgundy); }
+
+.church-card__photo {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 1px dashed var(--rule-soft);
+  background: var(--paper-2);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.church-card__photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.7;
+}
+.church-card__photo-caption {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.church-card__role {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+  margin-bottom: 6px;
+}
+.church-card__name {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.05;
+  margin: 0 0 18px;
+  letter-spacing: -0.005em;
+}
+
+.church-card__meta {
+  border-top: 1px solid var(--rule-soft);
+}
+.field {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule-vsoft);
+  gap: 16px;
+}
+.field__label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.65;
+}
+.field__value {
+  font-family: var(--serif);
+  font-size: 16px;
+  text-align: right;
+  color: var(--ink);
+}
+.field__value code {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.church-card__future {
+  margin-top: 22px;
+  padding: 14px 16px;
+  background: rgba(26,23,20,0.04);
+  border-left: 2px solid var(--burgundy);
+}
+
+/* === Location pin === */
+.church-card__pin {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule-soft);
+  background: rgba(26,23,20,0.025);
+}
+.church-card__pin-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.65;
+  margin-bottom: 6px;
+}
+.church-card__pin-coords {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 10px;
+  user-select: all;
+  word-break: break-all;
+}
+.church-card__pin-actions {
+  display: flex;
+  gap: 6px;
+}
+.pin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 120ms, border-color 120ms, color 120ms;
+  flex: 1 1 auto;
+}
+.pin-btn:hover {
+  border-color: var(--ink);
+  background: rgba(26,23,20,0.06);
+}
+.pin-btn--primary {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  color: var(--paper);
+}
+.pin-btn--primary:hover {
+  background: #5e2218;
+  border-color: #5e2218;
+  color: var(--paper);
+}
+.church-card__future-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+  margin-bottom: 8px;
+}
+.church-card__future-list {
+  margin: 0;
+  padding-left: 16px;
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink);
+  opacity: 0.78;
+}
+.church-card__future-list li {
+  margin-bottom: 4px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 880px) {
+  #app { padding: 12px; }
+  .export-root { padding: 22px 22px 18px; }
+  .masthead__brand-mark { width: 44px; height: 44px; }
+  .masthead__inner { padding: 14px 0 4px; gap: 18px; }
+  .map-stage {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .map-panel {
+    height: clamp(320px, 48vh, 460px);
+  }
+  .colophon__inner {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .colophon__signature {
+    border-left: 0;
+    border-top: 1px solid var(--rule-soft);
+    padding: 14px 0 0;
+    text-align: left;
+  }
+  .colophon__stats {
+    gap: 0;
+  }
+  .stat { min-width: 88px; padding: 0 14px; }
+  .stat__value { font-size: 24px; }
+  .legend__inner { gap: 16px; padding: 6px 12px; flex-wrap: wrap; justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  #app { padding: 6px; }
+  .export-root { padding: 18px 16px 14px; }
+  .masthead__inner { flex-direction: column; align-items: stretch; gap: 12px; }
+  .masthead__brand { gap: 12px; }
+  .masthead__brand-mark { width: 40px; height: 40px; }
+  .masthead__title { font-size: 26px; white-space: normal; }
+  .masthead__sub { font-size: 14px; }
+  .masthead__eyebrow { font-size: 9px; }
+  .masthead__controls {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .ctl-btn { flex: 1 1 auto; justify-content: center; padding: 9px 10px; font-size: 10px; }
+  .map-panel { height: 60vh; min-height: 320px; }
+  .map-panel__layer-switcher {
+    top: auto;
+    bottom: 14px;
+    right: 50%;
+    transform: translateX(50%);
+    font-size: 10px;
+  }
+  .map-panel__layer-switcher::before { display: none; }
+  .layer-btn { padding: 7px 9px; font-size: 9.5px; }
+  .colophon__stats { flex-wrap: wrap; }
+  .stat { min-width: 0; flex: 1 1 30%; padding: 6px 8px; }
+  .stat__value { font-size: 20px; }
+  .colophon__byline { font-size: 8.5px; }
+  .church-card {
+    top: auto; bottom: 12px;
+    right: 12px; left: 12px;
+    transform: none;
+    max-height: 70vh;
+    width: auto;
+    padding: 18px 18px 14px;
+  }
+  @keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .church-card__photo { aspect-ratio: 16/9; }
+  .north-arrow { width: 32px; height: 32px; bottom: 10px; left: 10px; }
+}
