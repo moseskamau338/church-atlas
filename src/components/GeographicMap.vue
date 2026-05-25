@@ -222,9 +222,13 @@ onMounted(() => {
     ...props.data.sabbathSchools.map((s) => [s.lat, s.lng]),
   ]
   bounds = L.latLngBounds(allPoints)
+  // Tight padding so the markers fill the panel — the old [30, 70] top
+  // reserved room for a layer switcher that lives in the header now.
+  // maxZoom caps the fit so a sparse district doesn't crank to street level.
   fitOpts = {
-    paddingTopLeft: [30, 70],
-    paddingBottomRight: [30, 40],
+    paddingTopLeft: [16, 28],
+    paddingBottomRight: [16, 16],
+    maxZoom: 14,
   }
 
   const m = L.map(containerRef.value, {
@@ -232,6 +236,10 @@ onMounted(() => {
     attributionControl: false,
     preferCanvas: false,
     worldCopyJump: false,
+    // Quarter-step zoom — lets fitBounds land closer to the exact best
+    // fit instead of rounding to a whole zoom level.
+    zoomSnap: 0.25,
+    zoomDelta: 0.5,
   })
   m.fitBounds(bounds, fitOpts)
 

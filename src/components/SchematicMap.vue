@@ -268,30 +268,22 @@ onBeforeUnmount(() => {
         />
         <circle :cx="edge.a.x" :cy="edge.a.y" r="3" fill="#1A1714" opacity="0.85" />
         <circle :cx="edge.b.x" :cy="edge.b.y" r="3" fill="#1A1714" opacity="0.85" />
-        <g v-if="showDistances">
-          <rect
-            :x="edge.labelX - 28"
-            :y="edge.labelY - 11"
-            width="56"
-            height="22"
-            rx="2"
-            :fill="paperFill"
-            stroke="#1A1714"
-            stroke-width="0.8"
-            opacity="0.97"
-          />
-          <text
-            :x="edge.labelX"
-            :y="edge.labelY + 4"
-            text-anchor="middle"
-            font-size="13"
-            font-family="IBM Plex Mono, monospace"
-            fill="#1A1714"
-            font-weight="500"
-          >
-            {{ edge.km }} km
-          </text>
-        </g>
+        <text
+          v-if="showDistances"
+          :x="edge.labelX"
+          :y="edge.labelY + 4"
+          text-anchor="middle"
+          font-size="13"
+          font-family="IBM Plex Mono, monospace"
+          fill="#1A1714"
+          font-weight="600"
+          :stroke="paperFill"
+          stroke-width="4"
+          stroke-linejoin="round"
+          paint-order="stroke"
+        >
+          {{ edge.km }} km
+        </text>
       </g>
 
       <g v-for="edge in sabbathEdges" :key="edge.key">
@@ -306,30 +298,23 @@ onBeforeUnmount(() => {
           stroke-dasharray="3 3"
           opacity="0.55"
         />
-        <g v-if="showDistances">
-          <rect
-            :x="edge.labelX - 22"
-            :y="edge.labelY - 9"
-            width="44"
-            height="18"
-            rx="2"
-            :fill="paperFill"
-            stroke="#1A1714"
-            stroke-width="0.5"
-            opacity="0.94"
-          />
-          <text
-            :x="edge.labelX"
-            :y="edge.labelY + 3.5"
-            text-anchor="middle"
-            font-size="10"
-            font-family="IBM Plex Mono, monospace"
-            fill="#1A1714"
-            opacity="0.85"
-          >
-            {{ edge.km }} km
-          </text>
-        </g>
+        <text
+          v-if="showDistances"
+          :x="edge.labelX"
+          :y="edge.labelY + 3.5"
+          text-anchor="middle"
+          font-size="10"
+          font-family="IBM Plex Mono, monospace"
+          fill="#1A1714"
+          font-weight="600"
+          opacity="0.95"
+          :stroke="paperFill"
+          stroke-width="3"
+          stroke-linejoin="round"
+          paint-order="stroke"
+        >
+          {{ edge.km }} km
+        </text>
       </g>
 
       <g
@@ -349,7 +334,11 @@ onBeforeUnmount(() => {
           font-size="13"
           font-weight="500"
           fill="#1A1714"
-          opacity="0.85"
+          opacity="0.95"
+          :stroke="paperFill"
+          stroke-width="3"
+          stroke-linejoin="round"
+          paint-order="stroke"
         >
           {{ ss.name }}
         </text>
@@ -382,6 +371,10 @@ onBeforeUnmount(() => {
           font-weight="600"
           letter-spacing="1.4"
           fill="#1A1714"
+          :stroke="paperFill"
+          stroke-width="3.5"
+          stroke-linejoin="round"
+          paint-order="stroke"
           :style="{ textTransform: 'uppercase' }"
         >
           {{ c.name.replace(' SDA', '') }}
