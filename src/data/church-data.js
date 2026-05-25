@@ -68,7 +68,14 @@ export const churches = [
     lng: 37.0912994,
     sx: 0.8,
     sy: 0.78,
-    sabbathSchools: [],
+    sabbathSchools: [
+      // Kagurumo meets near Muthithi Primary School area — ~1 km SE of Muthithi.
+      { id: 'kagurumo', name: 'Kagurumo', lat: -0.8461597, lng: 37.0985679, sx: 0.92, sy: 0.88 },
+      // Githuya at Githuya Primary School — ~3 km NW of Muthithi.
+      // (Google's pin was coarse — using the URL viewport centre as a better
+      // proxy for the actual school location.)
+      { id: 'githuya', name: 'Githuya', lat: -0.8189806, lng: 37.0784147, sx: 0.72, sy: 0.6 },
+    ],
   },
   {
     id: 'kamira',
