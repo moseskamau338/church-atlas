@@ -80,7 +80,7 @@ const futureItems = [
       </div>
       <div class="field">
         <div class="field__label">Founded</div>
-        <div class="field__value">{{ church.founded }}</div>
+        <div class="field__value">{{ church.founded || '—' }}</div>
       </div>
       <div class="field">
         <div class="field__label">Membership</div>
@@ -88,7 +88,7 @@ const futureItems = [
       </div>
       <div class="field">
         <div class="field__label">Services</div>
-        <div class="field__value">{{ church.services }}</div>
+        <div class="field__value">{{ church.services || '—' }}</div>
       </div>
     </div>
 

@@ -16,6 +16,7 @@ export const wards = [
   { id: 'gatanga', name: 'Gatanga Ward', population: 14820 },
   { id: 'muthithi', name: 'Muthithi Ward', population: 11340 },
   { id: 'kamira', name: 'Kamira Ward', population: 12500 },
+  { id: 'kigumo', name: 'Kigumo Ward', population: 13500 },
 ]
 
 export const churches = [
@@ -29,11 +30,30 @@ export const churches = [
     services: 'Sabbath · 09:00',
     lat: -0.7837603,
     lng: 37.0441453,
-    sx: 0.3,
-    sy: 0.22,
+    sx: 0.32,
+    sy: 0.2,
     sabbathSchools: [
       { id: 'kaharo', name: 'Kaharo', lat: -0.7976877, lng: 37.0603925, sx: 0.46, sy: 0.36 },
-      { id: 'gachocho', name: 'Gachocho', lat: -0.7852216, lng: 36.9982275, sx: 0.12, sy: 0.3 },
+      { id: 'gachocho', name: 'Gachocho', lat: -0.7852216, lng: 36.9982275, sx: 0.14, sy: 0.3 },
+    ],
+  },
+  {
+    id: 'kirere',
+    name: 'Kirere SDA',
+    role: 'Church',
+    ward: 'kigumo',
+    members: 41,
+    founded: null,
+    services: null,
+    lat: -0.8066614,
+    lng: 37.0058756,
+    sx: 0.22,
+    sy: 0.62,
+    sabbathSchools: [
+      // Kigumo sabbath school meets at the existing SDA Church Kigumo site
+      // (~30 km south of Kirere). Position on schematic placed far bottom-left
+      // since "Not to scale" — keeps the connecting line readable.
+      { id: 'kigumo', name: 'Kigumo', lat: -1.0321353, lng: 36.8289587, sx: 0.06, sy: 0.82 },
     ],
   },
   {
@@ -41,13 +61,13 @@ export const churches = [
     name: 'Muthithi SDA',
     role: 'Church',
     ward: 'muthithi',
-    members: 80,
+    members: 51,
     founded: 1989,
     services: 'Sabbath · 09:30',
     lat: -0.8413387,
     lng: 37.0912994,
-    sx: 0.78,
-    sy: 0.76,
+    sx: 0.8,
+    sy: 0.78,
     sabbathSchools: [],
   },
   {
@@ -55,13 +75,13 @@ export const churches = [
     name: 'Kamira SDA',
     role: 'Church',
     ward: 'kamira',
-    members: 65,
+    members: 44,
     founded: 1996,
     services: 'Sabbath · 10:00',
     lat: -0.8161724,
     lng: 37.0567938,
-    sx: 0.56,
-    sy: 0.58,
+    sx: 0.58,
+    sy: 0.52,
     sabbathSchools: [],
   },
 ]

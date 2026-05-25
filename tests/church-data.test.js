@@ -56,12 +56,12 @@ describe('buildMotherEdges', () => {
 describe('buildSabbathEdges', () => {
   it('connects each sabbath school to its parent only', () => {
     const edges = buildSabbathEdges(churches)
-    // Gathera has 2 sabbath schools in the fixture; others have 0.
-    expect(edges).toHaveLength(2)
+    const expected = churches.reduce((n, c) => n + (c.sabbathSchools?.length || 0), 0)
+    expect(edges).toHaveLength(expected)
     edges.forEach((e) => {
       expect(e.kind).toBe('sabbath')
-      expect(e.from).toBe('gathera')
-      expect(e.to.startsWith('gathera__')).toBe(true)
+      expect(churches.some((c) => c.id === e.from)).toBe(true)
+      expect(e.to.startsWith(`${e.from}__`)).toBe(true)
     })
   })
 })
