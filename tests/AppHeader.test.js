@@ -32,16 +32,14 @@ describe('AppHeader', () => {
     expect(w.text()).toContain(churchData.district.subCounty)
   })
 
-  it('emits fit, toggle-card, toggle-more, export', async () => {
+  it('emits fit, toggle-more, export', async () => {
     const w = factory()
-    const [fit, details, exportPng] = w.findAll('.ctl-btn, .split-btn__main')
+    const [fit, exportPng] = w.findAll('.ctl-btn, .split-btn__main')
     await fit.trigger('click')
-    await details.trigger('click')
     await exportPng.trigger('click')
     await w.get('.split-btn__chevron').trigger('click')
 
     expect(w.emitted('fit')).toHaveLength(1)
-    expect(w.emitted('toggle-card')).toHaveLength(1)
     expect(w.emitted('export')).toHaveLength(1)
     expect(w.emitted('toggle-more')).toHaveLength(1)
   })
@@ -54,11 +52,6 @@ describe('AppHeader', () => {
     expect(exportBtn.text()).toContain('Exporting')
   })
 
-  it('marks the details button active when card panel is open', () => {
-    const w = factory({ showCardPanel: true })
-    const detailsBtn = w.findAll('.ctl-btn')[1]
-    expect(detailsBtn.classes()).toContain('is-active')
-  })
 
   it('renders the MorePanel only when showMore=true', async () => {
     const closed = factory({ showMore: false })

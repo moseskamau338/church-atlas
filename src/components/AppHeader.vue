@@ -14,7 +14,6 @@ defineProps({
 defineEmits([
   'export',
   'fit',
-  'toggle-card',
   'toggle-more',
   'close-more',
   'base-layer-change',
@@ -54,24 +53,6 @@ defineEmits([
             <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" stroke-linecap="round" />
           </svg>
           <span>Fit</span>
-        </button>
-        <button
-          :class="['ctl-btn', { 'is-active': showCardPanel }]"
-          title="Toggle church detail panel"
-          @click="$emit('toggle-card')"
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <rect x="3" y="5" width="18" height="14" rx="1.5" />
-            <path d="M14 5v14" />
-          </svg>
-          <span>Details</span>
         </button>
 
         <div :class="['split-btn', { 'is-open': showMore }]">

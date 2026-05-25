@@ -51,15 +51,6 @@ function handleSelect(id) {
   showCardPanel.value = true
 }
 
-function handleToggleCard() {
-  if (!selectedId.value && data.churches.length > 0) {
-    selectedId.value = data.churches[0].id
-    showCardPanel.value = true
-  } else {
-    showCardPanel.value = !showCardPanel.value
-  }
-}
-
 function handleFit() {
   fitFn.value?.()
   resetSignal.value += 1
@@ -141,7 +132,6 @@ onBeforeUnmount(() => {
         :tweaks="tweaks"
         @export="handleExport"
         @fit="handleFit"
-        @toggle-card="handleToggleCard"
         @toggle-more="showMore = !showMore"
         @close-more="showMore = false"
         @base-layer-change="baseLayer = $event"

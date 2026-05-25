@@ -174,8 +174,7 @@ function renderMarkersAndEdges() {
         zIndexOffset: 200,
       }).addTo(m)
       ssMarker.bindTooltip(
-        `<div class="church-tip__name church-tip__name--small">${ss.name}</div>
-         <div class="church-tip__role">SABBATH SCHOOL</div>`,
+        `<div class="church-tip__name church-tip__name--small">${ss.name}</div>`,
         {
           permanent: true,
           direction: 'bottom',
