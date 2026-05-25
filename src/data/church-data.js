@@ -47,13 +47,13 @@ export const churches = [
     services: null,
     lat: -0.8066614,
     lng: 37.0058756,
-    sx: 0.22,
-    sy: 0.62,
+    sx: 0.24,
+    sy: 0.66,
     sabbathSchools: [
-      // Kigumo sabbath school meets at the existing SDA Church Kigumo site
-      // (~30 km south of Kirere). Position on schematic placed far bottom-left
-      // since "Not to scale" — keeps the connecting line readable.
-      { id: 'kigumo', name: 'Kigumo', lat: -1.0321353, lng: 36.8289587, sx: 0.06, sy: 0.82 },
+      // Kigumo meets near Kigumo Law Courts — ~3 km NW of Kirere.
+      { id: 'kigumo', name: 'Kigumo', lat: -0.8021257, lng: 36.9605047, sx: 0.08, sy: 0.54 },
+      // Kaimiri meets at the Seveni Shopping Centre area — ~1 km south of Kirere.
+      { id: 'kaimiri', name: 'Kaimiri', lat: -0.8150547, lng: 37.0022311, sx: 0.2, sy: 0.84 },
     ],
   },
   {
