@@ -4,13 +4,13 @@
   "description": "Editorial-style church atlas for the Gathera SDA District — Vue 3 port of the original Claude Design prototype.",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://github.com/your-org/gathera-church-vue#readme",
+  "homepage": "https://moseskamau338.github.io/church-atlas/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/gathera-church-vue.git"
+    "url": "https://github.com/moseskamau338/church-atlas.git"
   },
   "bugs": {
-    "url": "https://github.com/your-org/gathera-church-vue/issues"
+    "url": "https://github.com/moseskamau338/church-atlas/issues"
   },
   "keywords": [
     "vue",
