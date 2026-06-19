@@ -6,6 +6,7 @@
 import { computed, reactive, watch } from 'vue'
 import { haversineKm, round1 } from '../services/geo.js'
 import { getMatrix, hasMapboxToken, MODE_PROFILES, MATRIX_MAX_POINTS } from '../services/mapbox.js'
+import { BASE_STYLE_IDS, DEFAULT_BASE_STYLE } from '../services/base-styles.js'
 
 const STORAGE_KEY = 'traverse:session:v1'
 
@@ -75,6 +76,7 @@ function normalize(saved) {
     originId: hasOrigin ? saved.originId : (locations[0]?.id ?? null),
     connectionMode: VALID_CONNECTIONS.has(saved?.connectionMode) ? saved.connectionMode : 'all',
     showDurations: typeof saved?.showDurations === 'boolean' ? saved.showDurations : true,
+    baseStyle: BASE_STYLE_IDS.has(saved?.baseStyle) ? saved.baseStyle : DEFAULT_BASE_STYLE,
   }
 }
 
@@ -97,6 +99,7 @@ watch(
     originId: state.originId,
     connectionMode: state.connectionMode,
     showDurations: state.showDurations,
+    baseStyle: state.baseStyle,
   }),
   (snap) => {
     try {
@@ -179,6 +182,7 @@ function hydrate(snap) {
   if (snap.mode) state.mode = snap.mode
   if (snap.connectionMode) state.connectionMode = snap.connectionMode
   if (typeof snap.showDurations === 'boolean') state.showDurations = snap.showDurations
+  if (snap.baseStyle) state.baseStyle = snap.baseStyle
   const oi = snap.originIndex
   state.originId =
     oi != null && state.locations[oi] ? state.locations[oi].id : (state.locations[0]?.id ?? null)

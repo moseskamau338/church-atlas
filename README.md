@@ -144,7 +144,7 @@ A few notes:
 - **Train mode** is intentionally not included — no free routing API models rail networks. The modes are Direct, Driving, Walking, Cycling.
 - The **Matrix API** computes the full pairwise grid in one request and is capped at **25 points** per Mapbox's limit; beyond that, switch to Direct mode.
 - The session (your locations, mode, and connection settings) is persisted to `localStorage`, so it survives a reload.
-- **Shareable links:** the **Share** button copies a URL that encodes the whole session into the hash (`#/traverse?s=…`) — no backend needed. Opening it rebuilds the exact points/mode/connections, then cleans the URL. Links are immutable snapshots; a recipient editing locally doesn't affect your link. Very large sessions make long URLs.
+- **Shareable links:** the **Share** button copies a URL that encodes the whole session into the hash (`#/traverse?s=…`) — no backend needed. Opening it rebuilds the exact points, travel mode, connection setting, travel-time toggle and basemap style, then cleans the URL. Links are immutable snapshots; a recipient editing locally doesn't affect your link. Very large sessions make long URLs.
 - **Mobile:** the controls (mode, connections, travel time) and the places panel tuck into a slide-in drawer behind the **Configure & places** button.
 - Rename the tool in one place: the `TOOL_NAME` constant in `src/views/DistanceToolView.vue`.
 

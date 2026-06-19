@@ -5,6 +5,7 @@ const session = {
   mode: 'walking',
   connectionMode: 'origin',
   showDurations: false,
+  baseStyle: 'streets',
   originId: 'b',
   locations: [
     { id: 'a', name: 'Kenhut SDA', lat: -0.78376, lng: 37.04415 },
@@ -18,11 +19,12 @@ describe('share-link round-trip', () => {
     expect(s).toMatch(/^[A-Za-z0-9_-]+$/) // base64url, no +/=
   })
 
-  it('restores mode, connections, durations and origin index', () => {
+  it('restores mode, connections, durations, base style and origin index', () => {
     const out = decodeSession(encodeSession(session))
     expect(out.mode).toBe('walking')
     expect(out.connectionMode).toBe('origin')
     expect(out.showDurations).toBe(false)
+    expect(out.baseStyle).toBe('streets')
     expect(out.originIndex).toBe(1) // 'b' is the second location
   })
 
@@ -42,10 +44,11 @@ describe('share-link round-trip', () => {
 
   it('falls back to safe defaults for unknown enum values', () => {
     const out = decodeSession(
-      encodeSession({ ...session, mode: 'teleport', connectionMode: 'xyz' }),
+      encodeSession({ ...session, mode: 'teleport', connectionMode: 'xyz', baseStyle: 'hologram' }),
     )
     expect(out.mode).toBe('direct')
     expect(out.connectionMode).toBe('all')
+    expect(out.baseStyle).toBe('satellite')
   })
 
   it('clamps an out-of-range origin index to 0', () => {

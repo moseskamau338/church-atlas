@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useDistanceSession } from '../../composables/useDistanceSession.js'
 import { getMapboxToken, hasMapboxToken, reverseGeocode } from '../../services/mapbox.js'
+import { BASE_STYLES as STYLES } from '../../services/base-styles.js'
 
 const props = defineProps({
   lines: { type: Array, default: () => [] },
@@ -18,14 +19,8 @@ const markers = shallowRef([])
 const ready = ref(false)
 const dropping = ref(false)
 
-const STYLES = [
-  { id: 'satellite', label: 'Satellite', url: 'mapbox://styles/mapbox/satellite-streets-v12' },
-  { id: 'streets', label: 'Street', url: 'mapbox://styles/mapbox/streets-v12' },
-  { id: 'outdoors', label: 'Outdoor', url: 'mapbox://styles/mapbox/outdoors-v12' },
-  { id: 'light', label: 'Muted', url: 'mapbox://styles/mapbox/light-v11' },
-]
-const styleId = ref('satellite')
-const styleUrl = computed(() => STYLES.find((s) => s.id === styleId.value).url)
+// Basemap choice lives in the shared store so it rides along in share links.
+const styleUrl = computed(() => (STYLES.find((s) => s.id === state.baseStyle) || STYLES[0]).url)
 
 const SRC = 'traverse-lines'
 
@@ -233,8 +228,8 @@ defineExpose({ fit })
         v-for="s in STYLES"
         :key="s.id"
         class="layer-btn"
-        :class="{ 'is-active': styleId === s.id }"
-        @click="styleId = s.id"
+        :class="{ 'is-active': state.baseStyle === s.id }"
+        @click="state.baseStyle = s.id"
       >
         {{ s.label }}
       </button>

@@ -3,6 +3,8 @@
 // payload is minified JSON: mode, connection settings, origin index, and each
 // point as [lat, lng, name]. Coordinates are rounded to ~0.1 m precision.
 
+import { BASE_STYLE_IDS, DEFAULT_BASE_STYLE } from './base-styles.js'
+
 const r6 = (n) => Math.round(n * 1e6) / 1e6
 
 // UTF-8-safe base64url via TextEncoder/TextDecoder (no deprecated escape APIs).
@@ -28,6 +30,7 @@ export function encodeSession(state) {
     m: state.mode,
     c: state.connectionMode,
     d: state.showDurations ? 1 : 0,
+    b: state.baseStyle,
     o: state.locations.findIndex((l) => l.id === state.originId),
     p: state.locations.map((l) => [r6(l.lat), r6(l.lng), l.name]),
   }
@@ -52,6 +55,7 @@ export function decodeSession(s) {
       mode: MODES.has(o.m) ? o.m : 'direct',
       connectionMode: CONNECTIONS.has(o.c) ? o.c : 'all',
       showDurations: o.d !== 0,
+      baseStyle: BASE_STYLE_IDS.has(o.b) ? o.b : DEFAULT_BASE_STYLE,
       originIndex,
       locations,
     }
