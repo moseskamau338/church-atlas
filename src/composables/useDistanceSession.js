@@ -35,6 +35,9 @@ export const MODES = [
 let _seq = 0
 const nextId = () => `loc_${Date.now().toString(36)}_${(_seq++).toString(36)}`
 
+const VALID_MODES = new Set(MODES.map((m) => m.id))
+const VALID_CONNECTIONS = new Set(['all', 'origin', 'none'])
+
 function load() {
   try {
     const raw = globalThis.localStorage?.getItem(STORAGE_KEY)
@@ -45,15 +48,37 @@ function load() {
   }
 }
 
-const saved = load()
+// Drop malformed entries and re-stamp ids/colors so a corrupt or stale
+// localStorage payload can't poison the session.
+function sanitizeLocations(arr) {
+  if (!Array.isArray(arr)) return []
+  return arr
+    .filter((l) => l && Number.isFinite(l.lat) && Number.isFinite(l.lng))
+    .map((l, i) => ({
+      id: typeof l.id === 'string' && l.id ? l.id : nextId(),
+      name: typeof l.name === 'string' && l.name ? l.name : `Point ${i + 1}`,
+      placeName: typeof l.placeName === 'string' ? l.placeName : '',
+      lat: l.lat,
+      lng: l.lng,
+      color: colorFor(i),
+    }))
+}
 
-const state = reactive({
-  locations: saved?.locations ?? [],
-  mode: saved?.mode ?? 'direct',
-  originId: saved?.originId ?? null,
-  connectionMode: saved?.connectionMode ?? 'all', // 'all' | 'origin' | 'none'
-  showDurations: saved?.showDurations ?? true,
-})
+// Normalise the persisted snapshot — validate enums, coerce types — so unknown
+// values (e.g. an old/edited localStorage entry) can't break downstream code.
+function normalize(saved) {
+  const locations = sanitizeLocations(saved?.locations)
+  const hasOrigin = locations.some((l) => l.id === saved?.originId)
+  return {
+    locations,
+    mode: VALID_MODES.has(saved?.mode) ? saved.mode : 'direct',
+    originId: hasOrigin ? saved.originId : (locations[0]?.id ?? null),
+    connectionMode: VALID_CONNECTIONS.has(saved?.connectionMode) ? saved.connectionMode : 'all',
+    showDurations: typeof saved?.showDurations === 'boolean' ? saved.showDurations : true,
+  }
+}
+
+const state = reactive(normalize(load()))
 
 // Matrix of routed results, keyed by mode. `direct` is computed locally.
 const routed = reactive({
@@ -225,7 +250,9 @@ async function refreshRoutedMatrix() {
   }
 }
 
-// Recompute the routed grid when mode or the point set changes.
+// Recompute the routed grid when mode or the point set changes. `immediate`
+// covers the reload case: a session saved in a routed mode fetches its matrix
+// on first render instead of staying blank until something changes.
 let debounceTimer = null
 watch(
   () => [state.mode, state.locations.map((l) => `${l.lat},${l.lng}`).join('|')],
@@ -234,6 +261,7 @@ watch(
     clearTimeout(debounceTimer)
     debounceTimer = setTimeout(refreshRoutedMatrix, 250)
   },
+  { immediate: true },
 )
 
 // Unified matrix the UI consumes regardless of mode.

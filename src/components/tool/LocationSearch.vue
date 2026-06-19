@@ -125,8 +125,8 @@ onBeforeUnmount(() => {
 
     <p v-if="error" class="loc-search__error">{{ error }}</p>
     <p v-else-if="!tokenOk" class="loc-search__note">
-      No token: place search is off, but you can still paste
-      <code>lat, lng</code> or a full Plus Code, or click the map to drop pins.
+      No token: place search is off, but you can still paste a
+      <code>lat, lng</code> or a full Plus Code.
     </p>
     <p v-else class="loc-search__note">
       Tip: paste a <code>lat, lng</code> or a Google Plus Code (e.g. <code>QWH9+92 Nairobi</code>)
