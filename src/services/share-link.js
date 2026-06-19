@@ -5,16 +5,21 @@
 
 const r6 = (n) => Math.round(n * 1e6) / 1e6
 
-// UTF-8-safe base64url (handles non-ASCII place names).
+// UTF-8-safe base64url via TextEncoder/TextDecoder (no deprecated escape APIs).
 function toBase64Url(str) {
-  const b64 = btoa(unescape(encodeURIComponent(str)))
+  const bytes = new TextEncoder().encode(str)
+  let bin = ''
+  for (const b of bytes) bin += String.fromCharCode(b)
+  const b64 = btoa(bin)
   return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
 function fromBase64Url(s) {
   const b64 = s.replace(/-/g, '+').replace(/_/g, '/')
   const pad = b64.length % 4 ? '='.repeat(4 - (b64.length % 4)) : ''
-  return decodeURIComponent(escape(atob(b64 + pad)))
+  const bin = atob(b64 + pad)
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0))
+  return new TextDecoder().decode(bytes)
 }
 
 export function encodeSession(state) {
@@ -41,11 +46,13 @@ export function decodeSession(s) {
     const locations = o.p
       .map((row) => ({ lat: Number(row[0]), lng: Number(row[1]), name: String(row[2] ?? '') }))
       .filter((l) => Number.isFinite(l.lat) && Number.isFinite(l.lng))
+    // Clamp the origin to a valid index so consumers don't have to re-validate.
+    const originIndex = Number.isInteger(o.o) && o.o >= 0 && o.o < locations.length ? o.o : 0
     return {
       mode: MODES.has(o.m) ? o.m : 'direct',
       connectionMode: CONNECTIONS.has(o.c) ? o.c : 'all',
       showDurations: o.d !== 0,
-      originIndex: Number.isInteger(o.o) ? o.o : 0,
+      originIndex,
       locations,
     }
   } catch {

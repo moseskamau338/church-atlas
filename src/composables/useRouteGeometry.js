@@ -32,6 +32,7 @@ export function useRouteGeometry({ points, state, edgeIndices }) {
 
     // Direct: synchronous great-circle arcs, no network.
     if (mode === 'direct' || !hasMapboxToken()) {
+      loading.value = false
       lines.value = pairs.map(([i, j]) => {
         const a = locs[i]
         const b = locs[j]
@@ -50,8 +51,9 @@ export function useRouteGeometry({ points, state, edgeIndices }) {
     // Routed: fetch (or reuse cached) geometry per pair.
     const profile = MODE_PROFILES[mode]
     loading.value = true
-    const results = []
-    await Promise.all(
+    // Promise.all preserves input order, so `results` matches `pairs` order
+    // regardless of which fetch resolves first — no churn for v-for consumers.
+    const results = await Promise.all(
       pairs.map(async ([i, j]) => {
         const a = locs[i]
         const b = locs[j]
@@ -71,13 +73,13 @@ export function useRouteGeometry({ points, state, edgeIndices }) {
             geom = { coordinates: geodesicLine(a, b), straight: true }
           }
         }
-        results.push({
+        return {
           key: `${a.id}__${b.id}`,
           fromId: a.id,
           toId: b.id,
           color: a.color,
           ...geom,
-        })
+        }
       }),
     )
     if (myToken !== runToken) return // superseded by a newer rebuild

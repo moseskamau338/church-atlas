@@ -47,4 +47,10 @@ describe('share-link round-trip', () => {
     expect(out.mode).toBe('direct')
     expect(out.connectionMode).toBe('all')
   })
+
+  it('clamps an out-of-range origin index to 0', () => {
+    // originId that matches no location → findIndex returns -1 when encoding.
+    const out = decodeSession(encodeSession({ ...session, originId: 'missing' }))
+    expect(out.originIndex).toBe(0)
+  })
 })
