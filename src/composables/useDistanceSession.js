@@ -195,6 +195,13 @@ async function refreshRoutedMatrix() {
     return
   }
   if (locs.length > MATRIX_MAX_POINTS) {
+    // Invalidate any in-flight request and drop the stale grid so the UI shows
+    // the error state instead of indexing into a matrix of the wrong size.
+    matrixToken++
+    routed.distances = null
+    routed.durations = null
+    routed.mode = state.mode
+    routed.loading = false
     routed.error = `Routed matrix supports up to ${MATRIX_MAX_POINTS} points.`
     return
   }

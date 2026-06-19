@@ -68,10 +68,21 @@ function installLayers() {
     layout: { 'line-cap': 'round', 'line-join': 'round' },
     paint: { 'line-color': '#F5EDDE', 'line-width': 6, 'line-opacity': 0.7 },
   })
+  // `line-dasharray` isn't data-driven in Mapbox GL, so split into two filtered
+  // layers: routed paths render solid, straight (direct/fallback) ones dashed.
   m.addLayer({
     id: 'traverse-lines-main',
     type: 'line',
     source: SRC,
+    filter: ['==', ['get', 'dashed'], 0],
+    layout: { 'line-cap': 'round', 'line-join': 'round' },
+    paint: { 'line-color': ['get', 'color'], 'line-width': 3, 'line-opacity': 0.95 },
+  })
+  m.addLayer({
+    id: 'traverse-lines-dashed',
+    type: 'line',
+    source: SRC,
+    filter: ['==', ['get', 'dashed'], 1],
     layout: { 'line-cap': 'round', 'line-join': 'round' },
     paint: {
       'line-color': ['get', 'color'],

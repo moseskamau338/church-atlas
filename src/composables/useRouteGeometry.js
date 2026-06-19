@@ -22,7 +22,10 @@ export function useRouteGeometry({ points, state, edgeIndices }) {
   let runToken = 0
 
   async function rebuild() {
-    const locs = points.value
+    // Snapshot the locations array: routed mode awaits network calls, and if the
+    // underlying reactive array is mutated meanwhile, the `pairs` indices would
+    // point at the wrong (or missing) entries. The copy keeps indices stable.
+    const locs = points.value.slice()
     const mode = state.mode
     const pairs = edgeIndices.value
     const myToken = ++runToken

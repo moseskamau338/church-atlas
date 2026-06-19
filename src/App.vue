@@ -6,7 +6,7 @@ import { RouterView, RouterLink } from 'vue-router'
   <!-- Global site nav — sits outside every page's #export-root so it never
        leaks into a PNG export. -->
   <nav class="site-nav" aria-label="Primary">
-    <RouterLink :to="{ name: 'atlas' }" class="site-nav__link" active-class="is-active" exact>
+    <RouterLink :to="{ name: 'atlas' }" class="site-nav__link" exact-active-class="is-active">
       Church Atlas
     </RouterLink>
     <span class="site-nav__sep" aria-hidden="true">·</span>
