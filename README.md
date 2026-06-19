@@ -4,11 +4,18 @@ An editorial-style web atlas of the **Gathera SDA District** in Murang'a County,
 
 This is a Vue 3 port of an original [Claude Design](https://claude.ai/design) HTML/CSS/JS prototype.
 
+The app now ships **two pages**, switched via the nav pill at the top:
+
+- **`/` — Church Atlas:** the original Gathera SDA District plate (unchanged).
+- **`/traverse` — Traverse:** a general-purpose distance & route workbench. Search or click to add any set of locations, then read off the distance (and travel time) between *every* pair of points in a colour-keyed matrix. Choose the travel mode — **Direct** (straight-line), **Driving**, **Walking** or **Cycling** — and the connections redraw as real routed geometry on the map and a normalized schematic. See [Traverse & the Mapbox token](#traverse--the-mapbox-token).
+
 ## Stack
 
 - **Vue 3** (Composition API, `<script setup>` SFCs)
+- **Vue Router** (hash history) — two routes, lazy-loaded
 - **Vite** for dev server + build
-- **Leaflet** for the geographic map; raw SVG for the schematic
+- **Leaflet** for the atlas map; **Mapbox GL JS** for the Traverse map; raw SVG for both schematics
+- **Mapbox APIs** (Geocoding, Directions, Matrix) power Traverse search & routed distances
 - **html-to-image** for PNG export
 - **Vitest** + **@vue/test-utils** + **jsdom** for unit tests
 - **ESLint** (flat config) + **Prettier**
@@ -37,23 +44,41 @@ npm run dev          # http://localhost:5173
 
 ```
 src/
-├── App.vue                  # composes header, two maps, footer, card
-├── main.js                  # mounts the app, imports global CSS
-├── assets/styles.css        # editorial / cartographic styles (unscoped)
+├── App.vue                       # thin RouterView shell + global nav
+├── main.js                       # mounts the app, registers the router
+├── router/index.js               # two lazy routes: / (atlas), /traverse (tool)
+├── assets/styles.css             # editorial / cartographic styles (unscoped)
+├── views/
+│   ├── ChurchAtlasView.vue       # the original atlas page
+│   └── DistanceToolView.vue      # the Traverse page
 ├── data/
-│   ├── church-data.js       # district, wards, churches, edges, summary
-│   └── road-distances.js    # OSRM resolver with localStorage cache
+│   ├── church-data.js            # district, wards, churches, edges, summary
+│   └── road-distances.js         # OSRM resolver with localStorage cache
+├── services/
+│   ├── geo.js                    # haversine, geodesic arcs, schematic projector
+│   └── mapbox.js                 # Geocoding / Directions / Matrix wrappers
+├── composables/
+│   ├── useDistanceSession.js     # Traverse session store (points, mode, matrix)
+│   └── useRouteGeometry.js       # resolves connection geometry (shared by maps)
 └── components/
-    ├── AppHeader.vue        # masthead + Fit/Details/Export controls
-    ├── AppFooter.vue        # colophon with stats + license
-    ├── ChurchCard.vue       # slide-in detail panel
-    ├── SchematicMap.vue     # node-link SVG diagram
-    ├── GeographicMap.vue    # Leaflet map with custom markers/edges
-    ├── MorePanel.vue        # base layer + display toggles + paper tone
-    ├── MapLegend.vue        # icon key
-    ├── ChurchGlyph.vue      # SVG glyph reused in the schematic
-    └── tile-layers.js       # shared base-layer config
-tests/                       # Vitest suites (mirror src/ layout)
+    ├── AppHeader.vue             # atlas masthead + controls
+    ├── AppFooter.vue             # colophon with stats + license
+    ├── ChurchCard.vue            # slide-in detail panel
+    ├── SchematicMap.vue          # atlas node-link SVG diagram
+    ├── GeographicMap.vue         # atlas Leaflet map
+    ├── MorePanel.vue             # base layer + display toggles
+    ├── MapLegend.vue             # icon key
+    ├── ChurchGlyph.vue           # SVG glyph reused in the schematic
+    ├── tile-layers.js            # shared base-layer config
+    └── tool/                     # Traverse-only components
+        ├── ToolHeader.vue        # Traverse masthead + export
+        ├── ModeSwitcher.vue      # Direct / Driving / Walking / Cycling
+        ├── LocationSearch.vue    # Mapbox geocoder search box
+        ├── LocationList.vue      # added locations (rename / remove / origin)
+        ├── DistanceMatrix.vue    # N×N colour-keyed distance/time grid
+        ├── ToolSchematicMap.vue  # editorial SVG of the session
+        └── ToolGeographicMap.vue # Mapbox GL map with markers + route layers
+tests/                            # Vitest suites (mirror src/ layout)
 ```
 
 ## Deployment (GitHub Pages)
@@ -65,6 +90,7 @@ To enable it:
 1. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 2. Push to `main`. The workflow installs deps, runs tests, builds with `VITE_BASE_PATH=/<repo-name>/`, and deploys.
 3. The page will appear at `https://<your-org>.github.io/<repo-name>/`.
+4. *(Optional)* To enable the Traverse map/search/routing in production, add a **`VITE_MAPBOX_TOKEN`** repository secret (Settings → Secrets and variables → Actions). The deploy workflow passes it into the build. Without it, Traverse ships in Direct mode.
 
 For local previews of the production build, set the env var:
 
@@ -98,6 +124,29 @@ refactor: extract tile-layer config           → patch bump
 Pre-1.0 (current state), `feat` bumps the patch — breaking changes don't trip a major. Set `"bump-minor-pre-major": false` in `release-please-config.json` to change that behavior when you're ready for 1.0.
 
 If you need a one-off manual bump (rare), `npm version <patch|minor|major>` works — release-please will pick up from wherever the version lands.
+
+## Traverse & the Mapbox token
+
+The Traverse tool (`/traverse`) uses Mapbox for place search, the basemap, and routed (driving / walking / cycling) distances. Provide a token to unlock those:
+
+```bash
+cp .env.example .env.local
+# edit .env.local and set VITE_MAPBOX_TOKEN=pk.your_token_here
+npm run dev
+```
+
+Get a free token at <https://account.mapbox.com/access-tokens/>. `.env.local` is git-ignored.
+
+**Without a token**, Traverse still works in **Direct** mode: the schematic and the great-circle (straight-line) distance matrix render fully. The Mapbox map, search box, and routed modes show a prompt to add a token.
+
+A few notes:
+
+- **Train mode** is intentionally not included — no free routing API models rail networks. The modes are Direct, Driving, Walking, Cycling.
+- The **Matrix API** computes the full pairwise grid in one request and is capped at **25 points** per Mapbox's limit; beyond that, switch to Direct mode.
+- The session (your locations, mode, and connection settings) is persisted to `localStorage`, so it survives a reload.
+- **Shareable links:** the **Share** button copies a URL that encodes the whole session into the hash (`#/traverse?s=…`) — no backend needed. Opening it rebuilds the exact points/mode/connections, then cleans the URL. Links are immutable snapshots; a recipient editing locally doesn't affect your link. Very large sessions make long URLs.
+- **Mobile:** the controls (mode, connections, travel time) and the places panel tuck into a slide-in drawer behind the **Configure & places** button.
+- Rename the tool in one place: the `TOOL_NAME` constant in `src/views/DistanceToolView.vue`.
 
 ## Editing the data
 

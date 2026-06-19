@@ -35,7 +35,10 @@
   "dependencies": {
     "html-to-image": "^1.11.13",
     "leaflet": "^1.9.4",
-    "vue": "^3.5.13"
+    "mapbox-gl": "^3.25.0",
+    "open-location-code": "^1.0.3",
+    "vue": "^3.5.13",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",

@@ -11,14 +11,7 @@ defineProps({
   baseLayer: { type: String, required: true },
   tweaks: { type: Object, required: true },
 })
-defineEmits([
-  'export',
-  'fit',
-  'toggle-more',
-  'close-more',
-  'base-layer-change',
-  'set-tweak',
-])
+defineEmits(['export', 'fit', 'toggle-more', 'close-more', 'base-layer-change', 'set-tweak'])
 </script>
 
 <template>

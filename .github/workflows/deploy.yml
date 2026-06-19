@@ -37,6 +37,11 @@ jobs:
           # Project-page base path — `${{ github.event.repository.name }}` gives
           # the repo name, so this works without hand-editing the config.
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          # Optional: add a VITE_MAPBOX_TOKEN repo secret to enable the Traverse
+          # tool's map, search and routed modes in production. If unset, Traverse
+          # still works in Direct (straight-line) mode. Mapbox `pk.` tokens are
+          # public client-side tokens, so embedding it in the build is expected.
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
         run: npm run build
 
       # Pages must be enabled once via Settings → Pages → Source: GitHub
