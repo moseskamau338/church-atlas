@@ -37,7 +37,10 @@ const proximity = computed(() => {
 // --- shareable link ---
 async function handleShare() {
   const s = encodeSession(state)
-  const href = window.location.origin + router.resolve({ name: 'traverse', query: { s } }).href
+  // Build from Vite's BASE_URL (e.g. "/church-atlas/" in prod, "/" in dev):
+  // router.resolve().href omits the deploy base under hash history, which
+  // produced links pointing at the domain root where nothing is served.
+  const href = `${window.location.origin}${import.meta.env.BASE_URL}#/traverse?s=${s}`
   try {
     await navigator.clipboard.writeText(href)
     share.copied = true
