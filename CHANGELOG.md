@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. This file is maintained automatically by [release-please](https://github.com/googleapis/release-please) — do not edit it by hand.
 
+## [0.1.4](https://github.com/moseskamau338/church-atlas/compare/v0.1.3...v0.1.4) (2026-06-20)
+
+
+### Features
+
+* **traverse:** include basemap & settings in share links; generic title ([d02b57d](https://github.com/moseskamau338/church-atlas/commit/d02b57d5264a7178c77982e9d4cfdde0224e2905))
+
+
+### Bug Fixes
+
+* **traverse:** correct share-link base path; encode settings + generic title ([52ebc57](https://github.com/moseskamau338/church-atlas/commit/52ebc576175932882fb6d29843a1bcb264ac6538))
+* **traverse:** include deploy base path in share links ([8db026f](https://github.com/moseskamau338/church-atlas/commit/8db026fb8aa406cb3298179f00fd766d54d11575))
+
 ## [0.1.3](https://github.com/moseskamau338/church-atlas/compare/v0.1.2...v0.1.3) (2026-06-19)
 
 
