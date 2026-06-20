@@ -14,7 +14,9 @@ const routes = [
     path: '/traverse',
     name: 'traverse',
     component: () => import('../views/DistanceToolView.vue'),
-    meta: { title: 'Traverse — Distance Workbench' },
+    // Generic document title so a shared link reads neutrally in the browser
+    // tab / history (the in-app brand is still "Traverse").
+    meta: { title: 'Distance & Route Map' },
   },
   // Unknown paths fall back to the atlas home.
   { path: '/:pathMatch(.*)*', redirect: { name: 'atlas' } },
