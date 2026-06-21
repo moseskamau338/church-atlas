@@ -1,6 +1,6 @@
 {
   "name": "gathera-church-vue",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Editorial-style church atlas for the Gathera SDA District — Vue 3 port of the original Claude Design prototype.",
   "type": "module",
   "license": "MIT",
